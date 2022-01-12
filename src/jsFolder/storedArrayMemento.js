@@ -1,9 +1,11 @@
-export var storedArrayMemento = function(array, algoName, comparison, swap)
+export var storedArrayMemento = function(array, algoName, comparison, swap,min,max)
 {
     this.array = array;
     this.algoName = algoName;
     this.comparison = comparison;
     this.swap = swap;
+    this.min = min;
+    this.max = max;
 }
 
 storedArrayMemento.prototype={
@@ -17,6 +19,7 @@ storedArrayMemento.prototype={
         this.algoName = m.algoName;
         this.comparison = m.comparison;
         this.swap = m.swap;
+        return m;
     }
 }
 
@@ -24,7 +27,6 @@ export var CareTaker = function(){
     this.mementos = {};
     this.key = 0;
     this.push = function (memento) {
-        console.log("memento = " + memento)
         if(this.key <5)
             this.mementos[this.key++] = memento.hydrate();
         else{
@@ -40,6 +42,7 @@ export var CareTaker = function(){
         console.log(this.mementos)
     },
         this.get = function (key) {
-            return this.mementos[key].dehydrate();
+            console.log(new storedArrayMemento(null,null,null,null,null,null).dehydrate(this.mementos[key]));
+            return new storedArrayMemento(null,null,null,null,null,null).dehydrate(this.mementos[key]);
         }
 }

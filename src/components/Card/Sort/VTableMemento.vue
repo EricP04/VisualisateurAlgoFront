@@ -27,13 +27,7 @@ export default {
     },
     onListClicked(index)
     {
-      console.log("OUI index="+index)
-      this.$emit("testEvent",index)
-    }
-  },
-  watch:{
-    careTaker(){
-      console.log("UPDATE ICI")
+      this.$emit("mementoSelected",index)
     }
   }
 

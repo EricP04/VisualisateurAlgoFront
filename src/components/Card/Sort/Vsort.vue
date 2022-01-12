@@ -49,7 +49,7 @@
           <p>Comparison: {{comparisons}} Swap : {{ swap }}</p>
         </div>
         <div class="row d-flex justify-content-center">
-          <VTableMemento :care-taker="Object.values(mementoInstance.mementos)"/>
+          <VTableMemento :care-taker="Object.values(mementoInstance.mementos)" v-on:mementoSelected="handleChange"/>
         </div>
       </div>
 
@@ -73,9 +73,9 @@ let len = 0;
 let min = 0;
 let max = 50;
 let algoNames = null;
+let algoSelected = null;
 let comparisons =0
 let swap=0;
-let algoSelected ="QuickSort";
 let receiving = true;
 let mementoInstance = new CareTaker();
 export default {
@@ -99,13 +99,8 @@ export default {
         this.swap += textString.split("/").map(Number)[2]
       }
       this.receiving=true;
-      console.log("On a fini")
-      console.log("array base = " + arrayBase)
-      console.log("algo name = " + algoName)
-      console.log("comparisons = " + this.comparisons)
-      console.log("swap = " + this.swap)
 
-      mementoInstance.push(new storedArrayMemento(arrayBase, algoName,this.comparisons,this.swap));
+      mementoInstance.push(new storedArrayMemento(arrayBase, algoName,this.comparisons,this.swap,this.min, this.max));
       var tmp = mementoInstance;
       this.mementoInstance = new CareTaker();
       this.mementoInstance=tmp;
@@ -131,7 +126,6 @@ export default {
     },
     setRandomVector(len, min, max)
       {
-        console.log("SET RANDOM VECTOR ")
       if(!this.checkValueGenerationVector(parseInt(len),parseInt(min),parseInt(max)))
         return;
           array = generateRandomVectorBounded(len,min,max)
@@ -143,26 +137,29 @@ export default {
       onChange(event)
       {
         algoSelected=event.target.value;
-        console.log("Algo selected = "+algoSelected)
       },
       onStopClick()
       {
         this.receiving=false;
-      }
+      },
+    handleChange(event)
+    {
+      var data =this.mementoInstance.get(event);
+      algoSelected = data.algoName;
+      this.array = data.array;
+      this.min = data.min;
+      this.max = data.max;
+    }
 
   },
   async mounted() {
 
     let test = await getAvailableAlgo();
     this.algoNames = test.toString().split(',')
-  },
-  created() {
-    this.$on("testEvent",(index)=>{console.log("ouiiii"+index)})
-
+    this.algoSelected = this.algoNames[0];
   },
   watch:{
     mementoInstance(){
-      console.log("UPDATED DANS VSORT + ");
       console.log(this.mementoInstance.mementos)
       this.$emit('updatedData',this.mementoInstance);
     }
